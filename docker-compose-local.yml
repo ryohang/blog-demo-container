@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+  proxy:
+    image: blog-demo-proxy
+    restart: always
+    links:
+     - api:api.awsmeter.io
+    ports:
+     - "80:80"
+  
+  api:
+    image: blog-demo-api
+    restart: always
+    links:
+     - db:db.awsmeter.io
+
+  worker:
+    image: blog-demo-worker
+    restart: always
+    links:
+     - db:db.awsmeter.io
+  
+  db:
+    image: blog-demo-db
+    restart: always
+    ports:
+     - "5432:5432"
+    volumes_from:
+     - data
+  
+  data:
+    image: blog-demo-db
+    command: echo 'Data Container for PostgreSQL' 
