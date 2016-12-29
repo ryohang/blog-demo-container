@@ -13,13 +13,13 @@ services:
     image: blog-demo-api
     restart: always
     links:
-     - db:db.awsmeter.io
+     - db:demo-db.awsmeter.io
 
   worker:
     image: blog-demo-worker
     restart: always
     links:
-     - db:db.awsmeter.io
+     - db:demo-db.awsmeter.io
   
   db:
     image: blog-demo-db

@@ -90,8 +90,8 @@ Resources:
     Type: "AWS::Route53::HostedZone"
     Properties: 
       HostedZoneConfig: 
-        Comment: "private hosted zone for awsmeter.io"
-      Name: "awsmeter.io"
+        Comment: "private hosted zone for awsmeter.io app"
+      Name: "awsmeter.app"
       VPCs: 
         - VPCId: !Ref 'VpcId'
           VPCRegion: !Ref "AWS::Region"
@@ -102,7 +102,7 @@ Resources:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref 'MeterDNS'
-      Name: demo-db.awsmeter.io.
+      Name: demo-db.awsmeter.app.
       Type: CNAME
       TTL: '300'
       ResourceRecords:
@@ -154,7 +154,7 @@ Resources:
     Properties:
       ContainerDefinitions:
       - Name: proxy
-        Memory: 300
+        Memory: 500
         Essential: false
         Image: ryohang/blog-demo-proxy
         Links:
@@ -162,16 +162,15 @@ Resources:
         PortMappings:
         - ContainerPort: 80		  
       - Name: api
-        Cpu: 300
+        Memory: 1536
         Essential: true
         Image: ryohang/blog-demo-api
-        Memory: 400
   workerTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
       ContainerDefinitions:
       - Name: worker
-        Memory: 200
+        Memory: 1536
         Essential: true
         Image: ryohang/blog-demo-worker
   ECSDemoALB:
@@ -321,7 +320,7 @@ Resources:
     - demoDB
     Properties:
       Cluster: !Ref 'DemoCluster'
-      DesiredCount: '3'
+      DesiredCount: '2'
       TaskDefinition: !Ref 'workerTaskDefinition'
   apiServiceScalingTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
