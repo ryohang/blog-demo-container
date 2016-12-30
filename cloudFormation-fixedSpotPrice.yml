@@ -131,6 +131,11 @@ Resources:
         Fn::GetAtt:
         - RDSSecurityGroup
         - GroupId
+  DemoQueue: 
+    Type: "AWS::SQS::Queue"
+    Properties: 
+      QueueName: "meter-aws-blog-demo"
+      DelaySeconds: 1
   demoDB:
     DependsOn: RDSSecurityGroup
     Type: "AWS::RDS::DBInstance"
@@ -151,6 +156,7 @@ Resources:
       PubliclyAccessible: false
   apiTaskDefinition:
     Type: AWS::ECS::TaskDefinition
+    DependsOn: ECSTaskRole
     Properties:
       ContainerDefinitions:
       - Name: proxy
@@ -165,14 +171,17 @@ Resources:
         Memory: 1536
         Essential: true
         Image: ryohang/blog-demo-api
+      TaskRoleArn: !Ref 'ECSTaskRole'
   workerTaskDefinition:
     Type: AWS::ECS::TaskDefinition
+    DependsOn: ECSTaskRole
     Properties:
       ContainerDefinitions:
       - Name: worker
         Memory: 1536
         Essential: true
         Image: ryohang/blog-demo-worker
+      TaskRoleArn: !Ref 'ECSTaskRole'
   ECSDemoALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -383,6 +392,26 @@ Resources:
         Value: !Ref 'apiService'
       ComparisonOperator: GreaterThanThreshold
       MetricName: HTTPCode_ELB_5XX_Count
+  ECSTaskRole:
+    Type: AWS::IAM::Role
+    DependsOn: DemoQueue
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ecs-tasks.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: ecs-task
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:  ['sqs:ListQueues','sqs:GetQueueUrl','sqs:DeleteMessage','sqs:SendMessage','sqs:ReceiveMessage','sqs:SendMessageBatch']
+            Resource: "arn:aws:sqs:us-east-1:595312265488:meter-aws-blog-demo"
   ECSServiceRole:
     Type: AWS::IAM::Role
     Properties:
