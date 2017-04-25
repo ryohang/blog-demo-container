@@ -1,4 +1,5 @@
-##Blog Post
+
+# Blog Post
 
 https://blog.awsmeter.io/cost-optimization-spot-fleet-autoscaling/
 
