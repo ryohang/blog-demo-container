@@ -1,3 +1,7 @@
+#Blog Post
+https://blog.awsmeter.io/cost-optimization-spot-fleet-autoscaling/
+https://blog.awsmeter.io/run-stack-spot-instance/
+
 ## build docker images at local
 
     docker build -t blog-demo-proxy ./proxy/.
