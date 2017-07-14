@@ -1,9 +1,9 @@
 
 # Blog Post
 
-https://blog.awsmeter.io/cost-optimization-spot-fleet-autoscaling/
+https://blog.frugalops.com/cost-optimization-spot-fleet-autoscaling/
 
-https://blog.awsmeter.io/run-stack-spot-instance/
+https://blog.frugalops.com/running-stack-spot-instance/
 
 ## build docker images at local
 
